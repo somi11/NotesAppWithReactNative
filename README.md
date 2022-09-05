@@ -13,12 +13,12 @@
   title="Add Note Screen"
   style="display: inline-block; margin: 0 auto; max-width: 50px">
   <img
-  src="/images/pic3.jpeg"
+  src="/imgs/pic3.jpeg"
   alt="Alt text"
   title="Main Screen"
   style="display: inline-block; margin: 0 auto; max-width: 50px">
   <img
-  src="/images/pic4.jpeg"
+  src="/imgs/pic4.jpeg"
   alt="Alt text"
   title="Delete Screen"
   style="display: inline-block; margin: 0 auto; max-width: 50px">
