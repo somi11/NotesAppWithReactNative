@@ -12,7 +12,7 @@ const Splash = (props) => {
   
   return (
     <View style ={styles.container}>
-      <Image style={styles.logo} source={ require('../../../assets/Main_Logo.svg')
+      <Image style={styles.logo} source={ require('../../../assets/sp1.png')
         
       }/>
     </View>
@@ -25,10 +25,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: "center",
-    backgroundColor : backgroundColor
+    backgroundColor : "#fff"
 
   }, logo: {
-      height:150 , width :200
+      height:500 , width :500
   }
 })
 
