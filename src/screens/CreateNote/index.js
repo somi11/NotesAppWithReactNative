@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { View, Button, TextInput, StyleSheet, AsyncStorage } from 'react-native'
 import { BACKGROUND_COLOR } from '../../../res/drawable'
+import { getFirestore , addDoc} from "firebase/firestore";
+import App from '../../util/firebase'
 const CreateNote = (props) => {
+  const db = getFirestore(App);
   let { noteTitle } = props.route.params
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -25,10 +28,15 @@ const CreateNote = (props) => {
   const onAddPressed = async () => {
     if (title != '' && description != '') {
       try {
+         const docRef = await addDoc(collection(db, "Notes"), {
+          title: title,
+         description: description,
+  });
         let value = await AsyncStorage.getItem(title)
         if (value && !noteTitle) {
           alert('Title aLREADY EXIST')
         } else {
+          //if(title.includes('firebase')) return
           await AsyncStorage.setItem(title, description)
           alert('Note Saved')
           // setTitle('')

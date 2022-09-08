@@ -28,6 +28,13 @@ const Main = (props) => {
   }, [props.navigation])
   const keysFromAsyncStorage = async () => {
     let keys = await AsyncStorage.getAllKeys()
+    // keys.values.map(async (key) => {
+    //  // if (key.includes('firebase')) {
+    //     //await AsyncStorage.removeItem(key) 
+    //     alert('got the key')
+    //   //}
+    // })
+    console.log(typeof keys)
     if (keys.length !== data.length) setData(keys)
   }
   const showDialog = (item) => {

@@ -4,6 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Splash from '../screens/SplashScreen'
 import Main from '../screens/Main/index'
 import CreateNote from '../screens/CreateNote'
+import Login from '../screens/login/'
+import Signup from '../screens/Signup'
 const Stack = createNativeStackNavigator()
 
 const Navigation = () => (
@@ -14,6 +16,8 @@ const Navigation = () => (
         name="Splash"
         component={Splash}
       />
+      <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />
+      <Stack.Screen  options={{ headerShown: false }} name="Signup" component={Signup} />
       <Stack.Screen name="Main" component={Main} />
       <Stack.Screen
         name="CreateNote"

@@ -7,7 +7,7 @@ import { backgroundColor , } from '../../../res/drawable'
 const Splash = (props) => {
   
   setTimeout(() => {
-     props.navigation.replace("Main")
+     props.navigation.replace("Login")
    }, 3000) 
   
   return (
