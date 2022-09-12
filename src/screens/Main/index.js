@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
-  AsyncStorage,
   View,
   StyleSheet,
   FlatList,
@@ -11,31 +10,38 @@ import {
 import { ADD_BUTTON_IMG, DOC_BUTTON_IMG } from '../../../res/drawable.js'
 import ImageButton from '../../components/imageButton'
 import Dialog from 'react-native-dialog'
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
-
+import { collection, doc, getDocs, deleteDoc } from 'firebase/firestore'
+import { db } from '../../util/firebase'
+import { EmailContext } from '../../contexts/emailContext'
+import MyDbActivityIndicator from '../../components/activity-indicatior/MyDbActivityIndicator'
 const Main = (props) => {
   let [item, setitem] = useState('')
   const [data, setData] = useState([])
   const [visible, setVisible] = useState(false)
+  const [showIndicator, setShowIndicator] = useState(true)
+  const { mainEmail } = useContext(EmailContext)
   const refreshList = props.navigation.addListener('focus', async () => {
-    let keys = await AsyncStorage.getAllKeys()
-    setData(keys)
+    keysFromFirebase()
   })
   useEffect(() => {
-    keysFromAsyncStorage()
+    keysFromFirebase()
     console.log('refreshed')
     refreshList
   }, [props.navigation])
-  const keysFromAsyncStorage = async () => {
-    let keys = await AsyncStorage.getAllKeys()
-    // keys.values.map(async (key) => {
-    //  // if (key.includes('firebase')) {
-    //     //await AsyncStorage.removeItem(key) 
-    //     alert('got the key')
-    //   //}
-    // })
-    console.log(typeof keys)
-    if (keys.length !== data.length) setData(keys)
+  const keysFromFirebase = async () => {
+    setShowIndicator(true)
+    try {
+      let dockeys = []
+      const querySnapshot = await getDocs(collection(db, mainEmail))
+      if (querySnapshot) setShowIndicator(false)
+      querySnapshot.forEach((doc) => {
+        //console.log(doc.id, ' => ', doc.data())
+        dockeys.push(doc.id)
+      })
+      setData(dockeys)
+    } catch (e) {
+      alert(e.message)
+    }
   }
   const showDialog = (item) => {
     setVisible(true)
@@ -46,11 +52,11 @@ const Main = (props) => {
   }
   const handleDelete = async () => {
     try {
-      await AsyncStorage.removeItem(item)
-      let keys = await AsyncStorage.getAllKeys()
-      setData(keys)
-    } catch (exception) {
-      console.log(exception)
+      await deleteDoc(doc(db, mainEmail, item))
+      alert('entry deleted')
+      keysFromFirebase()
+    } catch (e) {
+      alert(e)
     }
     setVisible(false)
   }
@@ -62,22 +68,29 @@ const Main = (props) => {
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
-              onPress={() => props.navigation.navigate('CreateNote', { noteTitle: item })}
+              onPress={() =>
+                props.navigation.navigate('CreateNote', { noteTitle: item })
+              }
               onLongPress={() => showDialog(item)}
             >
               <View
                 style={{
-                  flex: 1,
+                  width: 80,
                   justifyContent: 'center',
                   alignItems: 'center',
                   margin: 5,
                 }}
               >
-                <Image style={{ height: 80, width: 80 }} source={DOC_BUTTON_IMG} />
+                <Image
+                  style={{ height: 80, width: 80 }}
+                  source={DOC_BUTTON_IMG}
+                />
                 <Text
                   style={{
                     fontWeight: 'bold',
                   }}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
                 >
                   {item}
                 </Text>
@@ -91,28 +104,30 @@ const Main = (props) => {
       <View style={styles.container3}>
         <ImageButton
           source={ADD_BUTTON_IMG}
-          onPress={() => props.navigation.navigate('CreateNote', { noteTitle: null })}
+          onPress={() =>
+            props.navigation.navigate('CreateNote', { noteTitle: null })
+          }
+          style={{ height: 60, width: 60 }}
         />
       </View>
       <Dialog.Container visible={visible}>
         <Dialog.Title>Note delete</Dialog.Title>
-        <Dialog.Description>You sure you want to delete this Note?</Dialog.Description>
+        <Dialog.Description>
+          You sure you want to delete this Note?
+        </Dialog.Description>
         <Dialog.Button label="Cancel" onPress={handleCancel} />
         <Dialog.Button label="Delete" onPress={handleDelete} />
       </Dialog.Container>
-      {/* <BannerAd
-        unitId={TestIds.BANNER}
-        size={BannerAdSize.LARGE_BANNER}
-        requestOptions={{ requestNonPersonalizedAdsOnly: true}}
-      /> */}
+      <MyDbActivityIndicator showIndicator={showIndicator} />
     </View>
   )
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    marginTop: 10,
+    alignItems: 'flex-start',
+    marginTop: 20,
+    marginLeft: 15,
   },
   container2: {
     flex: 1,

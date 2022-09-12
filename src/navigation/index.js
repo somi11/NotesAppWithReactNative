@@ -16,12 +16,41 @@ const Navigation = () => (
         name="Splash"
         component={Splash}
       />
-      <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />
-      <Stack.Screen  options={{ headerShown: false }} name="Signup" component={Signup} />
-      <Stack.Screen name="Main" component={Main} />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Login"
+        component={Login}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Signup"
+        component={Signup}
+      />
+      <Stack.Screen
+        name="Main"
+        component={Main}
+        options={{
+          title: 'My Notes',
+          headerStyle: {
+            backgroundColor: '#fea440',
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
       <Stack.Screen
         name="CreateNote"
         component={CreateNote}
+        options={{
+          title: 'Add Notes',
+          headerStyle: {
+            backgroundColor: '#fea440',
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
       />
     </Stack.Navigator>
   </NavigationContainer>

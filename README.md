@@ -3,22 +3,37 @@
 ### i have listed the screenshots of the app Below
 
 <img
-  src="/imgs/pic1.jpeg"
+  src="/imgs/splashpic.jpeg"
   alt="Alt text"
   title="Splash Screen"
   style="display: inline-block; margin: 0 auto; max-width: 50px">
-  <img
-  src="/imgs/pic2.jpeg"
+<img
+  src="/imgs/loginpic.jpeg"
+  alt="Alt text"
+  title="Login Screen"
+  style="display: inline-block; margin: 0 auto; max-width: 50px">
+<img
+  src="/imgs/signuppic.jpeg"
+  alt="Alt text"
+  title="Signup Screen"
+  style="display: inline-block; margin: 0 auto; max-width: 50px">
+<img
+  src="/imgs/mainscreenpic.jpeg"
+  alt="Alt text"
+  title="Add Notes Screen"
+  style="display: inline-block; margin: 0 auto; max-width: 50px">
+<img
+  src="/imgs/createnotepic.jpeg"
   alt="Alt text"
   title="Add Note Screen"
   style="display: inline-block; margin: 0 auto; max-width: 50px">
-  <img
-  src="/imgs/pic3.jpeg"
+<img
+  src="/imgs/updatenotepic.jpeg"
   alt="Alt text"
-  title="Main Screen"
+  title="Update Note Screen"
   style="display: inline-block; margin: 0 auto; max-width: 50px">
-  <img
-  src="/imgs/pic4.jpeg"
+<img
+  src="/imgs/deletenotepic.jpeg"
   alt="Alt text"
   title="Delete Screen"
   style="display: inline-block; margin: 0 auto; max-width: 50px">

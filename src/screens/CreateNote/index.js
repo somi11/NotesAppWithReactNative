@@ -1,50 +1,60 @@
-import React, { useState, useEffect } from 'react'
-import { View, Button, TextInput, StyleSheet, AsyncStorage } from 'react-native'
+import React, { useState, useEffect, useContext } from 'react'
+import { View, Button, TextInput, StyleSheet } from 'react-native'
 import { BACKGROUND_COLOR } from '../../../res/drawable'
-import { getFirestore , addDoc} from "firebase/firestore";
-import App from '../../util/firebase'
+import { setDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { db, App } from '../../util/firebase'
+import { EmailContext } from '../../contexts/emailContext'
+import MyDbActivityIndicator from '../../components/activity-indicatior/MyDbActivityIndicator'
 const CreateNote = (props) => {
-  const db = getFirestore(App);
   let { noteTitle } = props.route.params
   const [title, setTitle] = useState('')
+  const [showIndicator, setShowIndicator] = useState(false)
   const [description, setDescription] = useState('')
+  const { mainEmail } = useContext(EmailContext)
 
   useEffect(() => {
-    loadData()
+    loadDoc()
   }, [])
-  const loadData = async () => {
+
+  const loadDoc = async () => {
     if (noteTitle) {
       try {
-        let description = await AsyncStorage.getItem(noteTitle)
-        setTitle(noteTitle)
-        setDescription(description)
-        console.log('des is' + description)
+        setShowIndicator(true)
+        const docRef = doc(db, mainEmail, noteTitle)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          setTitle(docSnap.data().title)
+          setDescription(docSnap.data().description)
+          setShowIndicator(false)
+        } else {
+          console.log('No such document!')
+        }
       } catch (e) {
-        console.log(e)
+        alert(e)
       }
     }
-    console.log('re-rendered')
   }
+
   const onAddPressed = async () => {
     if (title != '' && description != '') {
       try {
-         const docRef = await addDoc(collection(db, "Notes"), {
+        setShowIndicator(true)
+        const docRef = await setDoc(doc(db, mainEmail, title), {
           title: title,
-         description: description,
-  });
-        let value = await AsyncStorage.getItem(title)
-        if (value && !noteTitle) {
-          alert('Title aLREADY EXIST')
-        } else {
-          //if(title.includes('firebase')) return
-          await AsyncStorage.setItem(title, description)
-          alert('Note Saved')
-          // setTitle('')
-          // setDescription('')
-          props.navigation.goBack()
-        }
+          description: description,
+        })
+        setShowIndicator(false)
+        // setTitle('')
+        // setDescription('')
+        props.navigation.goBack()
       } catch (e) {
         console.log(e)
+      }
+      if (noteTitle) {
+        const dref = doc(db, mainEmail, title)
+        await updateDoc(dref, {
+          description: description,
+        })
       }
     } else {
       alert('set title and description')
@@ -73,8 +83,13 @@ const CreateNote = (props) => {
         />
       </View>
       <View style={{ margin: 40 }}>
-        <Button onPress={() => onAddPressed()} title={noteTitle ? 'Update Title' : 'Add Note'} />
+        <Button
+          onPress={() => onAddPressed()}
+          title={noteTitle ? 'Update Note' : 'Add Note'}
+          color="#fea440"
+        />
       </View>
+      <MyDbActivityIndicator showIndicator={showIndicator} />
     </View>
   )
 }
